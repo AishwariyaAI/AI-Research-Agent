@@ -1,0 +1,33 @@
+import { useState } from "react";
+import API from "../api/api";
+
+export default function Resume() {
+  const [file, setFile] = useState(null);
+  const [result, setResult] = useState(null);
+
+  const upload = async () => {
+    const formData = new FormData();
+    formData.append("file", file);
+
+    const res = await API.post("/api/upload-resume", formData);
+    setResult(res.data);
+  };
+
+  return (
+    <div style={{ padding: "20px" }}>
+      <h2>Resume Upload</h2>
+
+      <input type="file" onChange={(e) => setFile(e.target.files[0])} />
+
+      <button onClick={upload}>Upload</button>
+
+      {result && (
+        <div>
+          <p>Filename: {result.filename}</p>
+          <p>Words: {result.word_count}</p>
+          <p>{result.message}</p>
+        </div>
+      )}
+    </div>
+  );
+}
